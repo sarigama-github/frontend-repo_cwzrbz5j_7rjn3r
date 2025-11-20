@@ -1,73 +1,62 @@
-function App() {
+import React, { useState } from 'react'
+import { Outlet, Link, useLocation } from 'react-router-dom'
+import { Menu, X, Home, GitHub, Linkedin } from 'lucide-react'
+import Sidebar from './components/Sidebar'
+
+function Topbar({ onMenu }) {
+  const location = useLocation()
+  const titles = {
+    '/': 'Graph Path Finder',
+    '/editor': 'Graph Editor',
+    '/ku-map': 'KU-Map Pathfinder',
+  }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-      {/* Subtle pattern overlay */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(59,130,246,0.05),transparent_50%)]"></div>
-
-      <div className="relative min-h-screen flex items-center justify-center p-8">
-        <div className="max-w-2xl w-full">
-          {/* Header with Flames icon */}
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center justify-center mb-6">
-              <img
-                src="/flame-icon.svg"
-                alt="Flames"
-                className="w-24 h-24 drop-shadow-[0_0_25px_rgba(59,130,246,0.5)]"
-              />
-            </div>
-
-            <h1 className="text-5xl font-bold text-white mb-4 tracking-tight">
-              Flames Blue
-            </h1>
-
-            <p className="text-xl text-blue-200 mb-6">
-              Build applications through conversation
-            </p>
-          </div>
-
-          {/* Instructions */}
-          <div className="bg-slate-800/50 backdrop-blur-sm border border-blue-500/20 rounded-2xl p-8 shadow-xl mb-6">
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                1
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Describe your idea</h3>
-                <p className="text-blue-200/80 text-sm">Use the chat panel on the left to tell the AI what you want to build</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4 mb-6">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                2
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Watch it build</h3>
-                <p className="text-blue-200/80 text-sm">Your app will appear in this preview as the AI generates the code</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 text-white rounded-lg flex items-center justify-center font-bold">
-                3
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Refine and iterate</h3>
-                <p className="text-blue-200/80 text-sm">Continue the conversation to add features and make changes</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center">
-            <p className="text-sm text-blue-300/60">
-              No coding required • Just describe what you want
-            </p>
-          </div>
-        </div>
+    <header className="sticky top-0 z-40 bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <button aria-label="Open menu" onClick={onMenu} className="p-2 rounded-xl hover:bg-gray-100 text-gray-700">
+          <Menu className="w-6 h-6" />
+        </button>
+        <div className="text-sm sm:text-base font-semibold text-gray-800">{titles[location.pathname] || 'Graph Path Finder'}</div>
+        <Link to="/" className="p-2 rounded-xl hover:bg-gray-100 text-gray-700">
+          <Home className="w-5 h-5" />
+        </Link>
       </div>
-    </div>
+    </header>
   )
 }
 
-export default App
+function Footer() {
+  return (
+    <footer className="border-t border-gray-100 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 text-center text-sm text-gray-500 space-y-4">
+        <p className="font-medium text-gray-600">Created by the Graph Path Finder Team</p>
+        <div className="flex items-center justify-center gap-6">
+          <a href="https://github.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
+            <GitHub className="w-5 h-5" /> GitHub
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
+            <Linkedin className="w-5 h-5" /> LinkedIn
+          </a>
+          <a href="mailto:contact@example.com" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
+            contact@example.com
+          </a>
+        </div>
+        <p className="text-xs text-gray-400">© {new Date().getFullYear()} Graph Path Finder. All rights reserved.</p>
+      </div>
+    </footer>
+  )
+}
+
+export default function App() {
+  const [open, setOpen] = useState(false)
+  return (
+    <div className="min-h-screen flex flex-col bg-white text-gray-800">
+      <Topbar onMenu={() => setOpen(true)} />
+      <Sidebar open={open} onClose={() => setOpen(false)} />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  )
+}
